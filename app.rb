@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require_relative 'services/log_to_matches_service'
 require_relative 'models/player_leaderboard'
 require_relative 'models/death_leaderboard'
@@ -15,14 +17,14 @@ service.matches.each_with_index do |match, index|
   puts "Total kills: #{match.kills.size}"
   puts "Players: #{match.players.sort.join(', ')}"
 
-  puts "Kills:"
+  puts 'Kills:'
   leaderboard = PlayerLeaderboard.new(match)
   leaderboards << leaderboard
 
   sorted_results = sort_hash(leaderboard.results)
   print_hash(sorted_results)
 
-  puts "Causes of death:"
+  puts 'Causes of death:'
   deathboard = DeathLeaderboard.new(match)
   deathboards << deathboard
 

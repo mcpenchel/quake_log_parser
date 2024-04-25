@@ -1,3 +1,6 @@
+# frozen_string_literal: true
+
+# Class to model a match and it's connections to players and kills
 class Match
   attr_reader :kills, :players
 

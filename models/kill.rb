@@ -1,3 +1,6 @@
+# frozen_string_literal: true
+
+# Class to model a kill and it's logic
 class Kill
   attr_reader :death_cause
 

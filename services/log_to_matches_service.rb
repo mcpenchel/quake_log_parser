@@ -1,12 +1,15 @@
+# frozen_string_literal: true
+
 require_relative '../models/kill'
 require_relative '../models/match'
 
+# Service responsible for parsing the log into matches and it's kills
 class LogToMatchesService
   attr_reader :matches
 
-  NEW_MATCH = /^\s*\d+:\d{2}\sInitGame/
-  PLAYER_KILLED = /Kill:[\d\s]+:\s*(?<killer>.+) killed (?<victim>.+) by (?<death_cause>.+)/
-  PLAYER_CONNECTED = /^\s*\d+:\d{2}\sClientUserinfoChanged:\s\d+\s*n\\+(?<player>[^\\]+)/
+  NEW_MATCH = /^\s*\d+:\d{2}\sInitGame/.freeze
+  PLAYER_KILLED = /Kill:[\d\s]+:\s*(?<killer>.+) killed (?<victim>.+) by (?<death_cause>.+)/.freeze
+  PLAYER_CONNECTED = /^\s*\d+:\d{2}\sClientUserinfoChanged:\s\d+\s*n\\+(?<player>[^\\]+)/.freeze
 
   def initialize(file_name)
     @file_name = file_name
@@ -22,23 +25,30 @@ class LogToMatchesService
         @matches << match
       end
 
-      if line.match(PLAYER_CONNECTED)
-        player = line.match(PLAYER_CONNECTED)[:player]
+      connect_player_to_match(line, match) if line.match(PLAYER_CONNECTED)
 
-        match.connect_player(player)
-      end
+      next unless line.match(PLAYER_KILLED)
 
-      if line.match(PLAYER_KILLED)
-        data = line.match(PLAYER_KILLED)
-
-        kill = Kill.new(
-          killer: data[:killer],
-          victim: data[:victim],
-          death_cause: data[:death_cause]
-        )
-
-        match.register_kill(kill)
-      end
+      register_kill_to_match(line, match)
     end
+  end
+
+  private
+
+  def connect_player_to_match(line, match)
+    player = line.match(PLAYER_CONNECTED)[:player]
+    match.connect_player(player)
+  end
+
+  def register_kill_to_match(line, match)
+    data = line.match(PLAYER_KILLED)
+
+    kill = Kill.new(
+      killer: data[:killer],
+      victim: data[:victim],
+      death_cause: data[:death_cause]
+    )
+
+    match.register_kill(kill)
   end
 end

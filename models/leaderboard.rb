@@ -1,3 +1,6 @@
+# frozen_string_literal: true
+
+# Parent Class for death/player leaderboard calculation
 class Leaderboard
   attr_reader :results
 
@@ -10,7 +13,7 @@ class Leaderboard
 
   def self.all_time(leaderboards)
     results = Hash.new(0)
-    
+
     leaderboards.each { |board| board.results.each { |key, count| results[key] += count } }
 
     results

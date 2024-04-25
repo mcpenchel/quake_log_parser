@@ -7,9 +7,6 @@ class Match
   def initialize
     @players = []
     @kills   = []
-
-    @leaderboard = {}
-    @deathboard  = {}
   end
 
   def connect_player(player_name)

@@ -1,3 +1,8 @@
+# Hi there! If you're wondering about this file, I've left it here
+# just to document my way of thinking towards a solution: first I
+# made sure the regex was OK for extracting the info that we needed
+# and then I went to refactor the whole thing into classes and etc.
+
 kill_expression = /^\s*\d+:\d{2}\sKill/
 new_match_expression = /^\s*\d+:\d{2}\sInitGame/
 user_connected_expression = /^\s*\d+:\d{2}\sClientUserinfoChanged/
@@ -8,8 +13,6 @@ match_count = 0
 match_hash  = {}
 
 File.open('qgames.log').each do |line|
-  puts line
-
   # Starting new match
   if line.match?(new_match_expression)
     match_count += 1
